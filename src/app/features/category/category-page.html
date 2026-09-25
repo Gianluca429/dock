@@ -1,0 +1,99 @@
+<main class="category-page">
+  <section class="category-hero">
+    <div class="category-hero__inner page-shell">
+      <div class="category-hero__copy">
+        <p class="category-hero__eyebrow">
+          {{ config.eyebrow }}
+        </p>
+
+        <h1>
+          <span>{{ config.title }}</span>
+          <span class="category-hero__title-muted">
+            {{ config.titleMuted }}
+          </span>
+        </h1>
+
+        <p class="category-hero__description">
+          {{ config.description }}
+        </p>
+      </div>
+
+      <div
+        class="category-hero__visual"
+        [attr.aria-label]="'Prodotti ' + config.category + ' DOCK'"
+      >
+        <div class="category-hero__glow" aria-hidden="true"></div>
+
+        @for (product of heroProducts; track product.id) {
+          <img
+            class="category-hero__product"
+            [class]="'category-hero__product category-hero__product--' + product.id"
+            [src]="product.image"
+            [alt]="product.name"
+          />
+        }
+
+        <div class="category-hero__meta" aria-hidden="true">
+          <span>DOCK</span>
+          <span>{{ config.category }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="category-editorial">
+    <div class="page-shell">
+      <div class="category-editorial__media">
+        <img [src]="config.editorialImage" [alt]="config.category + ' DOCK'" />
+
+        <div class="category-editorial__overlay" aria-hidden="true"></div>
+
+        <div class="category-editorial__copy">
+          <p>{{ config.editorialEyebrow }}</p>
+
+          <h2>
+            {{ config.editorialTitle }}
+          </h2>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="category-products">
+    <div class="category-products__inner page-shell">
+      <header class="category-products__heading">
+        <p>{{ config.productsEyebrow }}</p>
+        <h2>{{ config.productsTitle }}</h2>
+      </header>
+
+      <div class="category-products__grid">
+        @for (product of products; track product.id) {
+          <app-product-card [product]="product" (addToCart)="addToCart($event)" />
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="category-builder">
+    <div class="page-shell">
+      <div class="category-builder__panel">
+        <div class="category-builder__copy">
+          <p class="category-builder__eyebrow">
+            {{ config.ctaEyebrow }}
+          </p>
+
+          <h2>{{ config.ctaTitle }}</h2>
+
+          <p class="category-builder__description">
+            {{ config.ctaText }}
+          </p>
+        </div>
+
+        <a class="category-builder__cta" routerLink="/" fragment="setup">
+          Costruisci il tuo setup
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>

@@ -1,7 +1,9 @@
 import { Routes } from '@angular/router';
+
 import { HomeComponent } from './features/home/home';
 import { CartComponent } from './features/cart/cart';
 import { ShopComponent } from './features/shop/shop';
+import { CategoryPageComponent } from './features/category/category-page';
 
 export const routes: Routes = [
   {
@@ -11,6 +13,13 @@ export const routes: Routes = [
   {
     path: 'shop',
     component: ShopComponent,
+  },
+  {
+    path: 'workspace',
+    component: CategoryPageComponent,
+    data: {
+      category: 'workspace',
+    },
   },
   {
     path: 'cart',
