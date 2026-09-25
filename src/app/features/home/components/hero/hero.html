@@ -1,0 +1,61 @@
+<section class="hero">
+  <div class="hero__content page-shell">
+    <div class="hero__copy">
+      <p class="hero__eyebrow">EVERYDAY TECH · CURATED</p>
+
+      <h1>
+        <span class="hero__title-line">Tecnologia che trova</span>
+        <span class="hero__title-line hero__title-line--muted">il suo posto.</span>
+      </h1>
+
+      <p class="hero__description">
+        Accessori e dispositivi selezionati per lavorare, ascoltare e vivere meglio il tuo spazio.
+      </p>
+
+      <div class="hero__actions">
+        <a class="button button--primary" href="#shop">Scopri i prodotti</a>
+        <a class="button button--ghost" href="#setup">Esplora il setup</a>
+      </div>
+    </div>
+
+    <div
+      class="hero__media"
+      aria-label="Prodotti DOCK in evidenza"
+      (mouseenter)="pauseAutoplay()"
+      (mouseleave)="resumeAutoplay()"
+    >
+      <div class="hero__slides">
+        @for (slide of slides; track slide.image; let i = $index) {
+          <figure
+            class="hero__slide"
+            [class]="slideClass(i)"
+            [attr.aria-hidden]="i !== activeIndex()"
+          >
+            <img [src]="slide.image" [alt]="slide.label + ' DOCK'" />
+          </figure>
+        }
+      </div>
+
+      <div class="hero__media-overlay" aria-hidden="true"></div>
+
+      <div class="hero__slide-meta" aria-live="polite">
+        <span class="hero__slide-index">
+          {{ formatIndex(activeIndex()) }} / {{ formatIndex(slides.length - 1) }}
+        </span>
+        <span>{{ slides[activeIndex()].label }}</span>
+      </div>
+
+      <div class="hero__dots" aria-label="Seleziona immagine">
+        @for (slide of slides; track slide.image; let i = $index) {
+          <button
+            type="button"
+            [class.is-active]="i === activeIndex()"
+            [attr.aria-label]="'Mostra ' + slide.label"
+            [attr.aria-current]="i === activeIndex() ? 'true' : null"
+            (click)="goToSlide(i)"
+          ></button>
+        }
+      </div>
+    </div>
+  </div>
+</section>

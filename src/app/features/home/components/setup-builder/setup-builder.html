@@ -1,0 +1,147 @@
+<section class="setup-builder" id="setup">
+  <div class="setup-builder__inner page-shell">
+    <div class="setup-builder__heading">
+      <div>
+        <p class="setup-builder__eyebrow">BUILD YOUR SETUP</p>
+        <h2>Costruisci il tuo setup.</h2>
+      </div>
+
+      <p class="setup-builder__intro">
+        Parti da una scrivania essenziale e aggiungi solo ciò che serve al tuo spazio quotidiano.
+      </p>
+    </div>
+
+    <div class="setup-builder__layout">
+      <div class="setup-builder__stage">
+        <div class="setup-builder__ambient" aria-hidden="true"></div>
+
+        <div class="setup-builder__monitor" aria-hidden="true">
+          <div class="setup-builder__monitor-screen">
+            <span></span>
+          </div>
+          <div class="setup-builder__monitor-neck"></div>
+          <div class="setup-builder__monitor-base"></div>
+        </div>
+
+        @for (item of items; track item.id) {
+          <img
+            class="setup-product"
+            [class]="item.positionClass"
+            [class.is-visible]="isSelected(item.id)"
+            [src]="item.image"
+            [alt]="item.name"
+          />
+        }
+
+        <button
+          class="setup-hotspot setup-hotspot--keyboard"
+          [class.is-selected]="isSelected('keyboard')"
+          type="button"
+          aria-label="Aggiungi o rimuovi Keys K1"
+          (click)="toggleItem('keyboard')"
+        >
+          <span>{{ isSelected('keyboard') ? '✓' : '+' }}</span>
+          <small>Keys</small>
+        </button>
+
+        <button
+          class="setup-hotspot setup-hotspot--audio"
+          [class.is-selected]="isSelected('audio')"
+          type="button"
+          aria-label="Aggiungi o rimuovi Halo Buds"
+          (click)="toggleItem('audio')"
+        >
+          <span>{{ isSelected('audio') ? '✓' : '+' }}</span>
+          <small>Audio</small>
+        </button>
+
+        <button
+          class="setup-hotspot setup-hotspot--power"
+          [class.is-selected]="isSelected('power')"
+          type="button"
+          aria-label="Aggiungi o rimuovi Charge M1"
+          (click)="toggleItem('power')"
+        >
+          <span>{{ isSelected('power') ? '✓' : '+' }}</span>
+          <small>Power</small>
+        </button>
+
+        <div class="setup-builder__stage-note">
+          <span>{{ selectedCount() }}/{{ items.length }}</span>
+          elementi selezionati
+        </div>
+      </div>
+
+      <aside class="setup-builder__panel">
+        <div class="setup-builder__panel-top">
+          <div>
+            <p class="setup-builder__panel-label">IL TUO SETUP</p>
+            <h3>Essenziale, per scelta.</h3>
+          </div>
+
+          @if (selectedCount()) {
+            <button class="setup-builder__clear" type="button" (click)="clearSetup()">
+              Reset
+            </button>
+          }
+        </div>
+
+        <div class="setup-builder__items">
+          @for (item of items; track item.id) {
+            <button
+              class="setup-item"
+              [class.is-selected]="isSelected(item.id)"
+              [class.is-placeholder]="!isSelected(item.id)"
+              type="button"
+              (click)="toggleItem(item.id)"
+            >
+              <span class="setup-item__toggle">
+                {{ isSelected(item.id) ? '✓' : '+' }}
+              </span>
+
+              <span class="setup-item__copy">
+                @if (isSelected(item.id)) {
+                  <small>{{ item.category }} · {{ item.code }}</small>
+                  <strong>{{ item.name }}</strong>
+                } @else {
+                  <small>{{ item.category }}</small>
+                  <strong>Seleziona un prodotto</strong>
+                }
+              </span>
+
+              <span class="setup-item__price">
+                @if (isSelected(item.id)) {
+                  {{ formatPrice(item.price) }}
+                } @else {
+                  —
+                }
+              </span>
+            </button>
+          }
+        </div>
+
+        <div class="setup-builder__summary">
+          <div class="setup-builder__total">
+            <span>Totale setup</span>
+            <strong>{{ formatPrice(total()) }}</strong>
+          </div>
+
+          <button
+            class="setup-builder__cta"
+            type="button"
+            [disabled]="!selectedCount()"
+            (click)="addSetupToCart()"
+          >
+            Aggiungi il setup al carrello
+          </button>
+
+          @if (confirmationVisible()) {
+            <p class="setup-builder__confirmation">
+              Setup aggiunto al carrello.
+            </p>
+          }
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>

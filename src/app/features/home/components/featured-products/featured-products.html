@@ -1,0 +1,55 @@
+<section class="featured-products">
+  <div class="featured-products__inner page-shell">
+    <div class="featured-products__heading">
+      <div>
+        <p class="featured-products__eyebrow">IN EVIDENZA</p>
+        <h2>Scelti da DOCK.</h2>
+      </div>
+
+      <a class="featured-products__all" routerLink="/shop">
+        Vedi tutti i prodotti
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+
+    <div class="featured-products__grid">
+      @for (product of products; track product.code) {
+        <article class="product-card">
+          <a class="product-card__visual" routerLink="/shop">
+            <span class="product-card__code">{{ product.code }}</span>
+
+            <img
+              [src]="product.image"
+              [alt]="product.name"
+              class="product-card__image"
+            />
+
+            <span class="product-card__open" aria-hidden="true">↗</span>
+          </a>
+
+          <div class="product-card__info">
+            <div>
+              <p class="product-card__category">{{ product.category }}</p>
+              <h3>{{ product.name }}</h3>
+            </div>
+
+            <div class="product-card__buy">
+              <span class="product-card__price">
+                {{ formatPrice(product.price) }}
+              </span>
+
+              <button
+                class="product-card__add"
+                type="button"
+                [attr.aria-label]="'Aggiungi ' + product.name + ' al carrello'"
+                (click)="addToCart(product)"
+              >
+                <span aria-hidden="true">+</span>
+              </button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>

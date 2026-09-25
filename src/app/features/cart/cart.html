@@ -1,0 +1,172 @@
+<main class="cart-page">
+  <div class="cart-page__inner page-shell">
+    <header class="cart-page__header">
+      <div>
+        <p class="cart-page__eyebrow">YOUR CART</p>
+        <h1>Il tuo carrello.</h1>
+      </div>
+
+      <p class="cart-page__intro">
+        Tutto ciò che hai scelto, in un unico posto.
+      </p>
+    </header>
+
+    @if (cart.items().length) {
+      <div class="cart-page__layout">
+        <section class="cart-page__items" aria-label="Prodotti nel carrello">
+          <div class="cart-page__items-head">
+            <p>
+              {{ cart.itemCount() }}
+              {{ cart.itemCount() === 1 ? 'articolo' : 'articoli' }}
+            </p>
+
+            @if (!clearConfirmationVisible()) {
+              <button
+                class="cart-page__clear"
+                type="button"
+                (click)="requestClearCart()"
+              >
+                Svuota carrello
+              </button>
+            } @else {
+              <div class="cart-page__clear-confirmation">
+                <span>Svuotare tutto?</span>
+
+                <button type="button" (click)="clearCart()">
+                  Sì, svuota
+                </button>
+
+                <button
+                  class="cart-page__clear-cancel"
+                  type="button"
+                  (click)="cancelClearCart()"
+                >
+                  Annulla
+                </button>
+              </div>
+            }
+          </div>
+
+          <div class="cart-page__list">
+            @for (line of cart.items(); track line.product.code) {
+              <article class="cart-item">
+                <div class="cart-item__visual">
+                  <img
+                    [src]="line.product.image"
+                    [alt]="line.product.name"
+                  />
+                </div>
+
+                <div class="cart-item__copy">
+                  <p>
+                    {{ line.product.category }} · {{ line.product.code }}
+                  </p>
+
+                  <h2>{{ line.product.name }}</h2>
+
+                  <button
+                    class="cart-item__remove"
+                    type="button"
+                    (click)="removeItem(line.product.code)"
+                  >
+                    Rimuovi
+                  </button>
+                </div>
+
+                <div class="cart-item__quantity">
+                  <span>Quantità</span>
+
+                  <div class="cart-item__stepper">
+                    <button
+                      type="button"
+                      [attr.aria-label]="'Riduci quantità di ' + line.product.name"
+                      (click)="decreaseQuantity(line.product.code, line.quantity)"
+                    >
+                      −
+                    </button>
+
+                    <strong>{{ line.quantity }}</strong>
+
+                    <button
+                      type="button"
+                      [attr.aria-label]="'Aumenta quantità di ' + line.product.name"
+                      (click)="increaseQuantity(line.product.code, line.quantity)"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <strong class="cart-item__price">
+                  {{ formatPrice(line.product.price * line.quantity) }}
+                </strong>
+              </article>
+            }
+          </div>
+
+          <a class="cart-page__continue" routerLink="/shop">
+            ← Continua lo shopping
+          </a>
+        </section>
+
+        <aside class="cart-summary">
+          <p class="cart-summary__label">RIEPILOGO</p>
+
+          <div class="cart-summary__row">
+            <span>Articoli</span>
+            <strong>{{ cart.itemCount() }}</strong>
+          </div>
+
+          <div class="cart-summary__row">
+            <span>Subtotale</span>
+            <strong>{{ formatPrice(cart.subtotal()) }}</strong>
+          </div>
+
+          <div class="cart-summary__row cart-summary__row--muted">
+            <span>Spedizione</span>
+            <span>Calcolata al checkout</span>
+          </div>
+
+          <div class="cart-summary__total">
+            <span>Totale</span>
+            <strong>{{ formatPrice(cart.subtotal()) }}</strong>
+          </div>
+
+          <button
+            class="cart-summary__checkout"
+            type="button"
+            (click)="showCheckoutNotice()"
+          >
+            Procedi al checkout
+          </button>
+
+          @if (checkoutNoticeVisible()) {
+            <p class="cart-summary__notice">
+              Il checkout sarà il prossimo step della demo.
+            </p>
+          }
+
+          <p class="cart-summary__microcopy">
+            Nessun pagamento viene effettuato in questa demo.
+          </p>
+        </aside>
+      </div>
+    } @else {
+      <section class="cart-empty">
+        <span class="cart-empty__icon" aria-hidden="true">+</span>
+
+        <p class="cart-empty__eyebrow">0 ITEMS</p>
+        <h2>Qui c'è ancora spazio.</h2>
+
+        <p>
+          Esplora la selezione DOCK e aggiungi ciò che serve al tuo setup.
+        </p>
+
+        <a routerLink="/shop">
+          Vai allo shop
+          <span aria-hidden="true">↗</span>
+        </a>
+      </section>
+    }
+  </div>
+</main>

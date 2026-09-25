@@ -1,0 +1,47 @@
+<section class="categories">
+  <div class="page-shell categories__inner">
+    <div class="categories__heading">
+      <div>
+        <p class="categories__eyebrow">SHOP BY USE</p>
+        <h2>Trova il tuo spazio.</h2>
+      </div>
+
+      <a class="categories__all" routerLink="/shop">
+        Tutto lo shop
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+
+    <div class="categories__grid">
+      @for (category of categories; track category.link) {
+        <a class="category-card" [routerLink]="category.link">
+          <div class="category-card__content">
+            <p class="category-card__eyebrow">{{ category.eyebrow }}</p>
+            <h3>{{ category.title }}</h3>
+
+            <p class="category-card__description">
+              {{ category.description }}
+            </p>
+
+            <span class="category-card__link">
+              Esplora
+              <span aria-hidden="true">↗</span>
+            </span>
+          </div>
+
+          <div class="category-card__visual">
+            <div class="category-card__glow" aria-hidden="true"></div>
+
+            <img
+              class="category-card__image"
+              [src]="category.productImage"
+              [alt]="category.title + ' DOCK'"
+            />
+
+            <span class="category-card__corner" aria-hidden="true">↗</span>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>

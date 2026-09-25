@@ -1,0 +1,51 @@
+<main class="shop-page">
+  <div class="shop-page__inner page-shell">
+    <header class="shop-page__header">
+      <div>
+        <p class="shop-page__eyebrow">CURATED TECH</p>
+        <h1>Lo shop DOCK.</h1>
+      </div>
+
+      <p class="shop-page__intro">
+        Una selezione essenziale di tecnologia pensata per lavorare,
+        ascoltare e muoversi meglio ogni giorno.
+      </p>
+    </header>
+
+    <div class="shop-page__toolbar">
+      <div class="shop-page__filters" aria-label="Filtra per categoria">
+        @for (category of categories; track category) {
+          <button
+            type="button"
+            [class.is-active]="selectedCategory() === category"
+            (click)="selectCategory(category)"
+          >
+            {{ category === 'All' ? 'Tutti' : category }}
+          </button>
+        }
+      </div>
+
+      <p class="shop-page__count">
+        {{ products().length }}
+        {{ products().length === 1 ? 'prodotto' : 'prodotti' }}
+      </p>
+    </div>
+
+    <section class="shop-grid" aria-label="Catalogo prodotti">
+      @for (product of products(); track product.code) {
+        <app-product-card
+          [product]="product"
+          (addToCart)="addToCart($event)"
+        />
+      }
+    </section>
+
+    <section class="shop-page__note">
+      <p>DOCK SELECTED</p>
+      <span>
+        Il catalogo crescerà mantenendo la stessa logica: pochi prodotti,
+        scelti bene.
+      </span>
+    </section>
+  </div>
+</main>

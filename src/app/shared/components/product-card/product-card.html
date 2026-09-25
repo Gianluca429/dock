@@ -1,0 +1,36 @@
+<article class="product-card">
+  <div class="product-card__visual">
+    <span class="product-card__code">{{ product().code }}</span>
+
+    <img [src]="product().image" [alt]="product().name" class="product-card__image" />
+  </div>
+
+  <div class="product-card__divider" aria-hidden="true"></div>
+
+  <div class="product-card__content">
+    <div class="product-card__copy">
+      <p class="product-card__category">{{ product().category }}</p>
+
+      <h2>{{ product().name }}</h2>
+
+      <p class="product-card__description">
+        {{ product().description }}
+      </p>
+    </div>
+
+    <div class="product-card__buy">
+      <strong class="product-card__price">
+        {{ formatPrice(product().price) }}
+      </strong>
+
+      <button
+        class="product-card__add"
+        type="button"
+        [attr.aria-label]="'Aggiungi ' + product().name + ' al carrello'"
+        (click)="onAddToCart()"
+      >
+        <span aria-hidden="true">+</span>
+      </button>
+    </div>
+  </div>
+</article>
