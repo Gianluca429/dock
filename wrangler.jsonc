@@ -1,0 +1,11 @@
+{
+  "name": "dock",
+  "compatibility_date": "2026-09-30",
+  "assets": {
+    "directory": "./dist/dock/browser",
+    "not_found_handling": "single-page-application"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
