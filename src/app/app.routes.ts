@@ -22,6 +22,20 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'audio',
+    component: CategoryPageComponent,
+    data: {
+      category: 'audio',
+    },
+  },
+  {
+    path: 'power',
+    component: CategoryPageComponent,
+    data: {
+      category: 'power',
+    },
+  },
+  {
     path: 'cart',
     component: CartComponent,
   },

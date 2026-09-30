@@ -23,102 +23,164 @@
           <div class="setup-builder__monitor-base"></div>
         </div>
 
-        @for (item of items; track item.id) {
+        @for (product of selectedItems(); track product.id) {
           <img
             class="setup-product"
-            [class]="item.positionClass"
-            [class.is-visible]="isSelected(item.id)"
-            [src]="item.image"
-            [alt]="item.name"
+            [class]="
+              'setup-product setup-product--' +
+              categorySlug(product.category) +
+              ' setup-product--id-' +
+              product.id
+            "
+            [src]="product.image"
+            [alt]="product.name"
           />
         }
 
         <button
           class="setup-hotspot setup-hotspot--keyboard"
-          [class.is-selected]="isSelected('keyboard')"
+          [class.is-selected]="selectedProduct('Workspace')"
           type="button"
-          aria-label="Aggiungi o rimuovi Keys K1"
-          (click)="toggleItem('keyboard')"
+          aria-label="Scegli un prodotto Workspace"
+          (click)="openCategory('Workspace')"
         >
-          <span>{{ isSelected('keyboard') ? '✓' : '+' }}</span>
-          <small>Keys</small>
+          <span>{{ selectedProduct('Workspace') ? '✓' : '+' }}</span>
+          <small>Workspace</small>
         </button>
 
         <button
           class="setup-hotspot setup-hotspot--audio"
-          [class.is-selected]="isSelected('audio')"
+          [class.is-selected]="selectedProduct('Audio')"
           type="button"
-          aria-label="Aggiungi o rimuovi Halo Buds"
-          (click)="toggleItem('audio')"
+          aria-label="Scegli un prodotto Audio"
+          (click)="openCategory('Audio')"
         >
-          <span>{{ isSelected('audio') ? '✓' : '+' }}</span>
+          <span>{{ selectedProduct('Audio') ? '✓' : '+' }}</span>
           <small>Audio</small>
         </button>
 
         <button
           class="setup-hotspot setup-hotspot--power"
-          [class.is-selected]="isSelected('power')"
+          [class.is-selected]="selectedProduct('Power')"
           type="button"
-          aria-label="Aggiungi o rimuovi Charge M1"
-          (click)="toggleItem('power')"
+          aria-label="Scegli un prodotto Power"
+          (click)="openCategory('Power')"
         >
-          <span>{{ isSelected('power') ? '✓' : '+' }}</span>
+          <span>{{ selectedProduct('Power') ? '✓' : '+' }}</span>
           <small>Power</small>
         </button>
 
         <div class="setup-builder__stage-note">
-          <span>{{ selectedCount() }}/{{ items.length }}</span>
+          <span>{{ selectedCount() }}/{{ categories.length }}</span>
           elementi selezionati
         </div>
       </div>
 
       <aside class="setup-builder__panel">
-        <div class="setup-builder__panel-top">
-          <div>
-            <p class="setup-builder__panel-label">IL TUO SETUP</p>
-            <h3>Essenziale, per scelta.</h3>
+        @if (activeCategory(); as category) {
+          <div class="setup-builder__panel-top setup-builder__panel-top--picker">
+            <div>
+              <button class="setup-builder__back" type="button" (click)="closeCategory()">
+                <span aria-hidden="true">←</span>
+                Il tuo setup
+              </button>
+
+              <p class="setup-builder__panel-label">
+                {{ category }}
+              </p>
+
+              <h3>Scegli il tuo prodotto.</h3>
+            </div>
+
+            @if (selectedProduct(category)) {
+              <button
+                class="setup-builder__remove"
+                type="button"
+                (click)="removeSelection(category)"
+              >
+                Rimuovi
+              </button>
+            }
           </div>
 
-          @if (selectedCount()) {
-            <button class="setup-builder__clear" type="button" (click)="clearSetup()">
-              Reset
-            </button>
-          }
-        </div>
+          <div class="setup-picker">
+            @for (product of productsForCategory(category); track product.id) {
+              <button
+                class="setup-choice"
+                [class.is-selected]="isSelected(product.id)"
+                type="button"
+                [attr.aria-pressed]="isSelected(product.id)"
+                (click)="selectProduct(product)"
+              >
+                <span class="setup-choice__visual">
+                  <img [src]="product.image" [alt]="product.name" />
+                </span>
 
-        <div class="setup-builder__items">
-          @for (item of items; track item.id) {
-            <button
-              class="setup-item"
-              [class.is-selected]="isSelected(item.id)"
-              [class.is-placeholder]="!isSelected(item.id)"
-              type="button"
-              (click)="toggleItem(item.id)"
-            >
-              <span class="setup-item__toggle">
-                {{ isSelected(item.id) ? '✓' : '+' }}
-              </span>
+                <span class="setup-choice__copy">
+                  <small>{{ product.code }}</small>
+                  <strong>{{ product.name }}</strong>
+                </span>
 
-              <span class="setup-item__copy">
-                @if (isSelected(item.id)) {
-                  <small>{{ item.category }} · {{ item.code }}</small>
-                  <strong>{{ item.name }}</strong>
-                } @else {
-                  <small>{{ item.category }}</small>
-                  <strong>Seleziona un prodotto</strong>
-                }
-              </span>
+                <span class="setup-choice__price">
+                  {{ formatPrice(product.price) }}
+                </span>
 
-              <span class="setup-item__price">
-                @if (isSelected(item.id)) {
-                  {{ formatPrice(item.price) }}
-                } @else {
-                  —
-                }
-              </span>
-            </button>
-          }
-        </div>
+                <span class="setup-choice__state" aria-hidden="true">
+                  {{ isSelected(product.id) ? '✓' : '+' }}
+                </span>
+              </button>
+            }
+          </div>
+        } @else {
+          <div class="setup-builder__panel-top">
+            <div>
+              <p class="setup-builder__panel-label">IL TUO SETUP</p>
+              <h3>Essenziale, per scelta.</h3>
+            </div>
+
+            @if (selectedCount()) {
+              <button class="setup-builder__clear" type="button" (click)="clearSetup()">
+                Reset
+              </button>
+            }
+          </div>
+
+          <div class="setup-builder__items">
+            @for (category of categories; track category) {
+              @let product = selectedProduct(category);
+
+              <button
+                class="setup-item"
+                [class.is-selected]="product"
+                [class.is-placeholder]="!product"
+                type="button"
+                (click)="openCategory(category)"
+              >
+                <span class="setup-item__toggle">
+                  {{ product ? '✓' : '+' }}
+                </span>
+
+                <span class="setup-item__copy">
+                  @if (product) {
+                    <small>{{ category }} · {{ product.code }}</small>
+                    <strong>{{ product.name }}</strong>
+                  } @else {
+                    <small>{{ category }}</small>
+                    <strong>Seleziona un prodotto</strong>
+                  }
+                </span>
+
+                <span class="setup-item__price">
+                  @if (product) {
+                    {{ formatPrice(product.price) }}
+                  } @else {
+                    —
+                  }
+                </span>
+              </button>
+            }
+          </div>
+        }
 
         <div class="setup-builder__summary">
           <div class="setup-builder__total">
@@ -136,9 +198,7 @@
           </button>
 
           @if (confirmationVisible()) {
-            <p class="setup-builder__confirmation">
-              Setup aggiunto al carrello.
-            </p>
+            <p class="setup-builder__confirmation">Setup aggiunto al carrello.</p>
           }
         </div>
       </aside>

@@ -13,7 +13,9 @@ import { CartService } from '../../../../core/services/cart.service';
 export class FeaturedProductsComponent {
   private readonly cart = inject(CartService);
 
-  readonly products = DOCK_PRODUCTS;
+  readonly products = DOCK_PRODUCTS.filter((product) =>
+    ['keyboard', 'audio', 'power'].includes(product.id),
+  );
 
   addToCart(product: Product): void {
     this.cart.add(product);

@@ -1,15 +1,10 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import {
-  CHARGE_M1,
-  HALO_BUDS,
-  KEYS_K1,
-} from '../../../../core/data/products';
+
+import { DOCK_PRODUCTS } from '../../../../core/data/products';
 import { Product } from '../../../../core/models/product';
 import { CartService } from '../../../../core/services/cart.service';
 
-interface SetupItem extends Product {
-  positionClass: string;
-}
+type SetupCategory = 'Workspace' | 'Audio' | 'Power';
 
 @Component({
   selector: 'app-setup-builder',
@@ -19,50 +14,89 @@ interface SetupItem extends Product {
 export class SetupBuilderComponent {
   private readonly cart = inject(CartService);
 
-  readonly items: SetupItem[] = [
-    {
-      ...KEYS_K1,
-      positionClass: 'setup-product--keyboard',
-    },
-    {
-      ...HALO_BUDS,
-      positionClass: 'setup-product--audio',
-    },
-    {
-      ...CHARGE_M1,
-      positionClass: 'setup-product--power',
-    },
-  ];
+  readonly categories: readonly SetupCategory[] = ['Workspace', 'Audio', 'Power'];
 
-  readonly selectedIds = signal<string[]>([]);
+  readonly activeCategory = signal<SetupCategory | null>(null);
+
+  readonly selections = signal<Record<SetupCategory, string | null>>({
+    Workspace: null,
+    Audio: null,
+    Power: null,
+  });
+
   readonly confirmationVisible = signal(false);
 
   readonly selectedItems = computed(() =>
-    this.items.filter((item) => this.selectedIds().includes(item.id)),
+    this.categories
+      .map((category) => this.selectedProduct(category))
+      .filter((product): product is Product => Boolean(product)),
   );
 
   readonly total = computed(() =>
-    this.selectedItems().reduce((sum, item) => sum + item.price, 0),
+    this.selectedItems().reduce((sum, product) => sum + product.price, 0),
   );
 
   readonly selectedCount = computed(() => this.selectedItems().length);
 
-  toggleItem(id: string): void {
-    this.confirmationVisible.set(false);
-
-    this.selectedIds.update((selected) =>
-      selected.includes(id)
-        ? selected.filter((selectedId) => selectedId !== id)
-        : [...selected, id],
-    );
+  productsForCategory(category: SetupCategory): readonly Product[] {
+    return DOCK_PRODUCTS.filter((product) => product.category === category);
   }
 
-  isSelected(id: string): boolean {
-    return this.selectedIds().includes(id);
+  selectedProduct(category: SetupCategory): Product | undefined {
+    const selectedId = this.selections()[category];
+
+    if (!selectedId) {
+      return undefined;
+    }
+
+    return DOCK_PRODUCTS.find((product) => product.id === selectedId);
+  }
+
+  openCategory(category: SetupCategory): void {
+    this.activeCategory.set(category);
+    this.confirmationVisible.set(false);
+  }
+
+  closeCategory(): void {
+    this.activeCategory.set(null);
+  }
+
+  selectProduct(product: Product): void {
+    const category = product.category as SetupCategory;
+
+    this.selections.update((current) => ({
+      ...current,
+      [category]: product.id,
+    }));
+
+    this.confirmationVisible.set(false);
+  }
+
+  removeSelection(category: SetupCategory): void {
+    this.selections.update((current) => ({
+      ...current,
+      [category]: null,
+    }));
+
+    this.confirmationVisible.set(false);
+  }
+
+  isSelected(productId: string): boolean {
+    return Object.values(this.selections()).includes(productId);
+  }
+
+  categorySlug(category: string): string {
+    return category.toLowerCase();
   }
 
   clearSetup(): void {
-    this.selectedIds.set([]);
+    this.selections.set({
+      Workspace: null,
+      Audio: null,
+      Power: null,
+    });
+
+    this.activeCategory.set(null);
     this.confirmationVisible.set(false);
   }
 
@@ -75,9 +109,13 @@ export class SetupBuilderComponent {
 
     this.cart.addMany(selectedItems);
 
-    // Il setup torna vuoto dopo l'aggiunta: il carrello contiene ormai
-    // la configurazione confermata, mentre il builder è pronto per crearne un'altra.
-    this.selectedIds.set([]);
+    this.selections.set({
+      Workspace: null,
+      Audio: null,
+      Power: null,
+    });
+
+    this.activeCategory.set(null);
     this.confirmationVisible.set(true);
   }
 

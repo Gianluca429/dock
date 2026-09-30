@@ -146,6 +146,53 @@
     transform: rotate(-3deg);
 }
 
+/* Audio hero */
+.category-hero__product--pulse-s1 {
+    top: 14%;
+    left: 8%;
+    width: min(34%, 190px);
+    transform: rotate(-4deg);
+}
+
+.category-hero__product--halo-max {
+    top: 8%;
+    right: 6%;
+    width: min(50%, 290px);
+    transform: rotate(5deg);
+}
+
+.category-hero__product--audio {
+    left: 18%;
+    bottom: 6%;
+    width: min(38%, 220px);
+    transform: rotate(-4deg);
+}
+
+/* Power hero */
+.category-hero__product--power {
+    top: 14%;
+    left: 8%;
+    width: min(30%, 175px);
+    transform: rotate(-5deg);
+    z-index: 3;
+}
+
+.category-hero__product--base-q1 {
+    top: 8%;
+    right: 5%;
+    width: min(48%, 285px);
+    transform: rotate(3deg);
+    z-index: 2;
+}
+
+.category-hero__product--charge-d2 {
+    left: 18%;
+    bottom: 10%;
+    width: min(38%, 220px);
+    transform: rotate(-3deg);
+    z-index: 4;
+}
+
 .category-hero__meta {
     position: absolute;
     z-index: 3;

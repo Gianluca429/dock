@@ -462,6 +462,10 @@
 }
 
 @media (max-width: 560px) {
+  .cart-page {
+    min-height: auto;
+  }
+
   .cart-page__items-head {
     align-items: flex-start;
   }

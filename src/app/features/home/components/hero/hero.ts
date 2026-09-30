@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 interface HeroSlide {
   image: string;
@@ -7,6 +8,7 @@ interface HeroSlide {
 
 @Component({
   selector: 'app-hero',
+  imports: [RouterLink],
   templateUrl: './hero.html',
   styleUrl: './hero.scss',
 })

@@ -1,6 +1,11 @@
 <header class="navbar">
   <div class="navbar__inner page-shell">
-    <a class="navbar__brand" routerLink="/" aria-label="DOCK home">
+    <a
+      class="navbar__brand"
+      routerLink="/"
+      aria-label="DOCK home"
+      (click)="closeMenu()"
+    >
       DOCK<span>.</span>
     </a>
 
@@ -31,7 +36,7 @@
     </nav>
 
     <div class="navbar__actions">
-      <button class="icon-button" type="button" aria-label="Cerca">
+      <button class="icon-button icon-button--search" type="button" aria-label="Cerca">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="11" cy="11" r="6.5"></circle>
           <path d="M16 16 21 21"></path>
@@ -45,6 +50,19 @@
       </button>
 
       <button
+        class="menu-button"
+        [class.is-open]="menuOpen()"
+        type="button"
+        aria-label="Apri menu"
+        aria-controls="mobile-navigation"
+        [attr.aria-expanded]="menuOpen()"
+        (click)="toggleMenu()"
+      >
+        <span></span>
+        <span></span>
+      </button>
+
+      <button
         class="cart-button"
         type="button"
         routerLink="/cart"
@@ -53,6 +71,7 @@
           cart.itemCount() +
           (cart.itemCount() === 1 ? ' prodotto' : ' prodotti')
         "
+        (click)="closeMenu()"
       >
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M3 4h2l2.2 10.1a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L21 7H6"></path>
@@ -66,4 +85,44 @@
       </button>
     </div>
   </div>
+
+  @if (menuOpen()) {
+    <nav
+      id="mobile-navigation"
+      class="navbar__mobile-menu"
+      aria-label="Navigazione mobile"
+    >
+      <div class="navbar__mobile-menu-inner page-shell">
+        <a
+          routerLink="/"
+          routerLinkActive="is-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeMenu()"
+        >
+          Home
+          <span aria-hidden="true">↗</span>
+        </a>
+
+        <a routerLink="/shop" routerLinkActive="is-active" (click)="closeMenu()">
+          Shop
+          <span aria-hidden="true">↗</span>
+        </a>
+
+        <a routerLink="/workspace" routerLinkActive="is-active" (click)="closeMenu()">
+          Workspace
+          <span aria-hidden="true">↗</span>
+        </a>
+
+        <a routerLink="/audio" routerLinkActive="is-active" (click)="closeMenu()">
+          Audio
+          <span aria-hidden="true">↗</span>
+        </a>
+
+        <a routerLink="/power" routerLinkActive="is-active" (click)="closeMenu()">
+          Power
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </nav>
+  }
 </header>
